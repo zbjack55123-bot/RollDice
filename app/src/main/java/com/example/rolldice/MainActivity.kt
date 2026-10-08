@@ -27,6 +27,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,13 +74,29 @@ fun Dice(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
+
         Image(
             painter = painterResource(id = diceImages[diceNumber]),
             contentDescription = "Dice",
-            modifier = Modifier.clickable {
-                diceNumber = (1..6).random()
-            }
+            modifier = Modifier
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            // 單擊：隨機產生 1～6 點
+                            diceNumber = (1..6).random()
+                        },
+                        onDoubleTap = {
+                            // 雙擊：回到 dice0
+                            diceNumber = 0
+                        },
+                        onLongPress = {
+                            // 長按：固定顯示 6 點
+                            diceNumber = 6
+                        }
+                    )
+                }
         )
+
     }
 }
 
